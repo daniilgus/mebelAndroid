@@ -110,7 +110,7 @@
         const baseUrl = 'https://mebelandroid-production.up.railway.app';
         let furnitureData = []; // Хранение всех данных о мебели
 
-               async function loadFurniture() {
+        async function loadFurniture() {
             try {
                 const response = await fetch(`${baseUrl}/furniture`);
                 if (!response.ok) {
@@ -128,7 +128,7 @@
         function displayFurniture(data) {
             const furnitureList = document.getElementById('furnitureList');
             furnitureList.innerHTML = ''; // Очищаем список
-
+        
             data.forEach(item => {
                 const li = document.createElement('li');
                 li.textContent = `${item.name} (${item.material})`; 
@@ -138,6 +138,7 @@
                 furnitureList.appendChild(li);
             });
         }
+
 
         function filterFurniture() {
             const searchTerm = document.getElementById('search').value.toLowerCase();

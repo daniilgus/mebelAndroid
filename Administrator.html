@@ -112,16 +112,17 @@
 
         async function loadFurniture() {
             try {
-                const response = await fetch(`${baseUrl}/furniture`);
+                const response = await fetch('/furniture');
                 if (!response.ok) {
                     throw new Error('Ошибка сети: ' + response.statusText);
                 }
-                furnitureData = await response.json(); // Сохраняем данные о мебели
-                displayFurniture(furnitureData); // Отображаем мебель
+                const furnitureData = await response.json();
+                displayFurniture(furnitureData);
             } catch (error) {
                 console.error('Ошибка при загрузке мебели:', error);
             }
         }
+
 
         function displayFurniture(data) {
             const furnitureList = document.getElementById('furnitureList');

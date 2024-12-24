@@ -74,8 +74,6 @@ app.delete('/furniture/:id', async (req, res) => {
     }
 });
 
-// Логин
-const bcrypt = require('bcrypt');
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;

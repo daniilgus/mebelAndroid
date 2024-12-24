@@ -11,7 +11,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'postgres.railway.internal',
     database: 'railway',
-    password: 'fufPvubwAEivKsaGLSqcRoYVFzJdILRs',
+    password: 'LHDGRwjsZnsBQUBvUIQVHvzKTdjaHleb',
     port: 5432,
 });
 

@@ -15,6 +15,23 @@ const pool = new Pool({
     port: 5432,
 });
 
+pool.connect()
+    .then(client => {
+        return client.query('SELECT NOW()')
+            .then(res => {
+                console.log('Подключение к базе данных успешно:', res.rows[0]);
+                client.release();
+            })
+            .catch(err => {
+                console.error('Ошибка при выполнении запроса:', err);
+                client.release();
+            });
+    })
+    .catch(err => {
+        console.error('Ошибка при подключении к базе данных:', err);
+    });
+
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname))); 
@@ -33,6 +50,7 @@ app.get('/furniture', async (req, res) => {
         res.status(500).json({ error: 'Ошибка сервера' });
     }
 });
+
 
 // Добавление новой мебели
 app.post('/furniture', async (req, res) => {

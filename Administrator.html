@@ -130,7 +130,7 @@
     </div>
 
     <script>
-        const baseUrl = 'https://mebelandroid-production.up.railway.app'; // Обновленная ссылка
+        const baseUrl = 'https://mebelandroid-production.up.railway.app';
         let furnitureData = []; // Хранение всех данных о мебели
 
         async function loadFurniture() {
@@ -166,17 +166,18 @@
                 item.name.toLowerCase().includes(searchTerm) || 
                 item.material.toLowerCase().includes(searchTerm)
             );
-            displayFurniture(filteredFurniture);
+            displayFurniture(filteredFurniture); // Отображаем отфильтрованный список
         }
 
         function selectFurniture(event) {
-            const selectedLi = event.target.closest('li');
-            if (selectedLi) {
-                const name = selectedLi.getAttribute('data-name');
-                const material = selectedLi.getAttribute('data-material');
-                document.getElementById('name').value = name;
-                document.getElementById('material').value = material;
-            }
+            const li = event.target.closest('li');
+            if (!li) return;
+
+            const name = li.getAttribute('data-name');
+            const material = li.getAttribute('data-material');
+
+            document.getElementById('name').value = name;
+            document.getElementById('material').value = material; 
         }
 
         async function addFurniture() {
@@ -187,68 +188,70 @@
                 const response = await fetch(`${baseUrl}/furniture`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name, material })
+                    body: JSON.stringify({ name, material }),
                 });
-                if (response.ok) {
-                    loadFurniture(); // Обновляем список мебели
-                    clearFields(); // Очищаем поля ввода
-                } else {
-                    alert('Ошибка при добавлении мебели.');
+
+                if (!response.ok) {
+                    throw new Error('Ошибка сети: ' + response.statusText);
                 }
+
+                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при добавлении мебели:', error);
             }
         }
 
         async function updateFurniture() {
-            const name = document.getElementById('name').value;
-            const material = document.getElementById('material').value;
-            const id = document.querySelector('#furnitureList .selected')?.getAttribute('data-furniture-id');
-
-            if (!id) {
-                alert('Сначала выберите мебель для обновления.');
+            const selectedLi = document.querySelector('#furnitureList .selected');
+            if (!selectedLi) {
+                alert('Пожалуйста, выберите мебель для обновления.');
                 return;
             }
 
+            const furnitureId = selectedLi.getAttribute('data-furniture-id');
+            const name = document.getElementById('name').value;
+            const material = document.getElementById('material').value;
+
             try {
-                const response = await fetch(`${baseUrl}/furniture/${id}`, {
+                const response = await fetch(`${baseUrl}/furniture/${furnitureId}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ name, material })
+                    body: JSON.stringify({ name, material }), 
                 });
-                if (response.ok) {
-                    loadFurniture(); // Обновляем список мебели
-                    clearFields(); // Очищаем поля ввода
-                } else {
-                    alert('Ошибка при обновлении мебели.');
+
+                if (!response.ok) {
+                    throw new Error('Ошибка сети: ' + response.statusText);
                 }
+
+                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при обновлении мебели:', error);
             }
         }
 
         async function deleteFurniture() {
-            const id = document.querySelector('#furnitureList .selected')?.getAttribute('data-furniture-id');
-
-            if (!id) {
-                alert('Сначала выберите мебель для удаления.');
+            const selectedLi = document.querySelector('#furnitureList .selected');
+            if (!selectedLi) {
+                alert('Пожалуйста, выберите мебель для удаления.');
                 return;
             }
 
+            const furnitureId = selectedLi.getAttribute('data-furniture-id');
+
             try {
-                const response = await fetch(`${baseUrl}/furniture/${id}`, {
-                    method: 'DELETE'
+                const response = await fetch(`${baseUrl}/furniture/${furnitureId}`, {
+                    method: 'DELETE',
                 });
-                if (response.ok) {
-                    loadFurniture(); // Обновляем список мебели
-                    clearFields(); // Очищаем поля ввода
-                } else {
-                    alert('Ошибка при удалении мебели.');
+
+                if (!response.ok) {
+                    throw new Error('Ошибка сети: ' + response.statusText);
                 }
+
+                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при удалении мебели:', error);
             }
@@ -257,16 +260,15 @@
         function clearFields() {
             document.getElementById('name').value = '';
             document.getElementById('material').value = '';
-            document.getElementById('search').value = '';
+            const furnitureListItems = document.querySelectorAll('#furnitureList li');
+            furnitureListItems.forEach(item => item.classList.remove('selected')); 
         }
 
+        document.addEventListener('DOMContentLoaded', loadFurniture);
+        
         function logout() {
-            // Логика выхода (например, очистка токена или редирект)
-            window.location.href = 'index.html'; // Перенаправление на страницу авторизации
+            window.location.href = 'index.html'; 
         }
-
-        // Загружаем мебель при загрузке страницы
-        window.onload = loadFurniture;
     </script>
 </body>
 </html>

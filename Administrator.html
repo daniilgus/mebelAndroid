@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#2196F3">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <title>Управление мебелью</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -14,93 +13,73 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #e9ecef; /* Более светлый фон */
+            color: #495057; /* Темный текст */
         }
 
         .furniture_container {
             background: #ffffff;
-            padding: 20px;
+            padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
+            width: 600px; /* Ширина контейнера */
         }
 
         h1, h2 {
-            color: #2196F3;
+            color: #007bff; /* Синий цвет */
             text-align: center;
+            margin-bottom: 20px;
         }
 
         #furnitureList {
             list-style-type: none;
             padding: 0;
-            max-height: 200px;
+            max-height: 300px; /* Высота списка */
             overflow-y: auto;
-            margin: 15px 0;
+            margin: 20px 0;
         }
 
         li {
-            padding: 10px;
-            border: 1px solid #ccc;
+            padding: 15px;
+            border: 1px solid #dee2e6; /* Светлая граница */
             margin: 5px 0;
-            border-radius: 5px;
-            background-color: #f9f9f9;
+            border-radius: 8px;
+            background-color: #f8f9fa; /* Светлый фон для элементов списка */
             transition: background-color 0.3s, transform 0.2s;
             cursor: pointer;
         }
 
         li:hover {
-            background-color: #e0e0e0;
+            background-color: #e2e6ea; /* Цвет при наведении */
             transform: scale(1.02);
         }
 
-        input {
+        input, button {
             margin: 10px 0;
-            padding: 10px;
-            width: calc(100% - 22px);
-            border: 2px solid #2196F3;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border: 1px solid #ced4da; /* Светлая граница */
             border-radius: 5px;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #f1f3f5; /* Светлый фон для полей ввода */
+            color: #495057;
             transition: border-color 0.3s;
         }
 
         input:focus {
             outline: none;
-            border-color: #1976D2;
+            border: 2px solid #007bff; /* Синий цвет при фокусе */
         }
 
         button {
-            width: 48%;
-            padding: 8px;
-            background-color: #2196F3;
-            color: #ffffff;
+            background-color: #007bff; /* Синий цвет кнопок */
+            color: white;
             border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px 1%;
             transition: background-color 0.3s, transform 0.2s;
         }
 
         button:hover {
-            background-color: #1976D2;
+            background-color: #0056b3; /* Темный синий при наведении */
             transform: scale(1.05);
-        }
-
-        .button-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        ::-webkit-scrollbar {
-            width: 10px; 
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f0f0f0; 
-            border-radius: 10px;
         }
     </style>
 </head>
@@ -111,8 +90,7 @@
         <input type="text" id="search" placeholder="Поиск мебели..." oninput="filterFurniture()">
         
         <h2>Список мебели:</h2>
-        <ul id="furnitureList" onclick="selectFurniture(event)">
-        </ul>
+        <ul id="furnitureList" onclick="selectFurniture(event)"></ul>
         
         <label for="name">Название мебели:</label>
         <input type="text" id="name" placeholder="Название мебели">
@@ -128,7 +106,6 @@
             <button onclick="logout()">Выход</button>
         </div>
     </div>
-
     <script>
         const baseUrl = 'https://mebelandroid-production.up.railway.app';
         let furnitureData = []; // Хранение всех данных о мебели

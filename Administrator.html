@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#66bb6a">
+    <meta name="theme-color" content="#4caf50">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="description" content="Управление мебелью.">
     <link rel="manifest" href="manifest.json">
@@ -19,20 +19,20 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #f5f5f5; /* Светлый фон */
+            color: #333; /* Темно-серый текст */
         }
 
         .furniture_container {
-            background: #1e1e1e;
+            background: #ffffff; /* Белый фон для контейнера */
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             width: 400px;
         }
 
         h1, h2 {
-            color: #66bb6a;
+            color: #4caf50; /* Зеленый заголовок */
             text-align: center;
         }
 
@@ -41,21 +41,21 @@
             padding: 0;
             max-height: 200px;
             overflow-y: auto;
-            margin: 20px 0;
+            margin: 15px 0;
         }
 
         li {
             padding: 10px;
-            border: 1px solid #444;
+            border: 1px solid #ccc; /* Светло-серый бордер */
             margin: 5px 0;
             border-radius: 5px;
-            background-color: #2a2a2a;
+            background-color: #f9f9f9; /* Светло-серый фон для элемента списка */
             transition: background-color 0.3s, transform 0.2s;
             cursor: pointer;
         }
 
         li:hover {
-            background-color: #3a3a3a;
+            background-color: #e0e0e0; /* Более темный фон при наведении */
             transform: scale(1.02);
         }
 
@@ -63,23 +63,23 @@
             margin: 10px 0;
             padding: 10px;
             width: calc(100% - 22px);
-            border: none;
+            border: 2px solid #4caf50; /* Зеленый бордер */
             border-radius: 5px;
-            background-color: #333;
-            color: #ffffff;
+            background-color: #f5f5f5; /* Светлый фон для инпутов */
+            color: #333; /* Темный текст */
             transition: border-color 0.3s;
         }
 
         input:focus {
             outline: none;
-            border: 2px solid #66bb6a;
+            border-color: #388e3c; /* Темно-зеленый бордер при фокусе */
         }
 
         button {
             width: 100%;
             padding: 10px;
-            background-color: #66bb6a;
-            color: #000;
+            background-color: #4caf50; /* Зеленая кнопка */
+            color: #ffffff; /* Белый текст */
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -88,8 +88,14 @@
         }
 
         button:hover {
-            background-color: #57a052;
+            background-color: #388e3c; /* Темно-зеленая кнопка при наведении */
             transform: scale(1.05);
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Пробел между кнопками */
         }
 
         ::-webkit-scrollbar {
@@ -97,7 +103,7 @@
         }
 
         ::-webkit-scrollbar-track {
-            background: #1e1e1e; 
+            background: #f0f0f0; 
             border-radius: 10px;
         }
     </style>
@@ -118,15 +124,17 @@
         <label for="material">Материал:</label>
         <input type="text" id="material" placeholder="Материал">
 
-        <button onclick="addFurniture()">Добавить мебель</button>
-        <button onclick="updateFurniture()">Обновить мебель</button>
-        <button onclick="deleteFurniture()">Удалить мебель</button>
-        <button onclick="clearFields()">Очистить поля</button>
-        <button onclick="logout()">Выход</button>
+        <div class="button-container">
+            <button onclick="addFurniture()">Добавить мебель</button>
+            <button onclick="updateFurniture()">Обновить мебель</button>
+            <button onclick="deleteFurniture()">Удалить мебель</button>
+            <button onclick="clearFields()">Очистить поля</button>
+            <button onclick="logout()">Выход</button>
+        </div>
     </div>
 
     <script>
-        const baseUrl = 'https://taskandroid-production.up.railway.app';
+        const baseUrl = 'https://mebelandroid-production.up.railway.app'; // Обновленная ссылка
         let furnitureData = []; // Хранение всех данных о мебели
 
         async function loadFurniture() {
@@ -162,18 +170,17 @@
                 item.name.toLowerCase().includes(searchTerm) || 
                 item.material.toLowerCase().includes(searchTerm)
             );
-            displayFurniture(filteredFurniture); // Отображаем отфильтрованный список
+            displayFurniture(filteredFurniture);
         }
 
         function selectFurniture(event) {
-            const li = event.target.closest('li');
-            if (!li) return;
-
-            const name = li.getAttribute('data-name');
-            const material = li.getAttribute('data-material');
-
-            document.getElementById('name').value = name;
-            document.getElementById('material').value = material; 
+            const selectedLi = event.target.closest('li');
+            if (selectedLi) {
+                const name = selectedLi.getAttribute('data-name');
+                const material = selectedLi.getAttribute('data-material');
+                document.getElementById('name').value = name;
+                document.getElementById('material').value = material;
+            }
         }
 
         async function addFurniture() {
@@ -184,70 +191,68 @@
                 const response = await fetch(`${baseUrl}/furniture`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, material }),
+                    body: JSON.stringify({ name, material })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка сети: ' + response.statusText);
+                if (response.ok) {
+                    loadFurniture(); // Обновляем список мебели
+                    clearFields(); // Очищаем поля ввода
+                } else {
+                    alert('Ошибка при добавлении мебели.');
                 }
-
-                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при добавлении мебели:', error);
             }
         }
 
         async function updateFurniture() {
-            const selectedLi = document.querySelector('#furnitureList .selected');
-            if (!selectedLi) {
-                alert('Пожалуйста, выберите мебель для обновления.');
+            const name = document.getElementById('name').value;
+            const material = document.getElementById('material').value;
+            const id = document.querySelector('#furnitureList .selected')?.getAttribute('data-furniture-id');
+
+            if (!id) {
+                alert('Сначала выберите мебель для обновления.');
                 return;
             }
 
-            const furnitureId = selectedLi.getAttribute('data-furniture-id');
-            const name = document.getElementById('name').value;
-            const material = document.getElementById('material').value;
-
             try {
-                const response = await fetch(`${baseUrl}/furniture/${furnitureId}`, {
+                const response = await fetch(`${baseUrl}/furniture/${id}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ name, material }), 
+                    body: JSON.stringify({ name, material })
                 });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка сети: ' + response.statusText);
+                if (response.ok) {
+                    loadFurniture(); // Обновляем список мебели
+                    clearFields(); // Очищаем поля ввода
+                } else {
+                    alert('Ошибка при обновлении мебели.');
                 }
-
-                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при обновлении мебели:', error);
             }
         }
 
         async function deleteFurniture() {
-            const selectedLi = document.querySelector('#furnitureList .selected');
-            if (!selectedLi) {
-                alert('Пожалуйста, выберите мебель для удаления.');
+            const id = document.querySelector('#furnitureList .selected')?.getAttribute('data-furniture-id');
+
+            if (!id) {
+                alert('Сначала выберите мебель для удаления.');
                 return;
             }
 
-            const furnitureId = selectedLi.getAttribute('data-furniture-id');
-
             try {
-                const response = await fetch(`${baseUrl}/furniture/${furnitureId}`, {
-                    method: 'DELETE',
+                const response = await fetch(`${baseUrl}/furniture/${id}`, {
+                    method: 'DELETE'
                 });
-
-                if (!response.ok) {
-                    throw new Error('Ошибка сети: ' + response.statusText);
+                if (response.ok) {
+                    loadFurniture(); // Обновляем список мебели
+                    clearFields(); // Очищаем поля ввода
+                } else {
+                    alert('Ошибка при удалении мебели.');
                 }
-
-                loadFurniture(); 
             } catch (error) {
                 console.error('Ошибка при удалении мебели:', error);
             }
@@ -256,15 +261,16 @@
         function clearFields() {
             document.getElementById('name').value = '';
             document.getElementById('material').value = '';
-            const furnitureListItems = document.querySelectorAll('#furnitureList li');
-            furnitureListItems.forEach(item => item.classList.remove('selected')); 
+            document.getElementById('search').value = '';
         }
 
-        document.addEventListener('DOMContentLoaded', loadFurniture);
-        
         function logout() {
-            window.location.href = 'index.html'; 
+            // Логика выхода (например, очистка токена или редирект)
+            window.location.href = 'index.html'; // Перенаправление на страницу авторизации
         }
+
+        // Загружаем мебель при загрузке страницы
+        window.onload = loadFurniture;
     </script>
 </body>
 </html>

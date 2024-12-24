@@ -2,70 +2,154 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизация</title>
+    <title>Управление мебелью</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <style>
         body {
             font-family: 'Roboto', sans-serif;
+            margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #121212;
+            background-color: #f0f0f0;
+            color: #333;
         }
-        .login-container {
-            background: #1e1e1e;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-            width: 300px;
+
+        .furniture_container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            width: 500px;
         }
-        h2 {
+
+        h1, h2 {
+            color: #2196F3; /* Изменено на синий */
             text-align: center;
-            color: #66bb6a;
+            margin-bottom: 20px;
         }
-        input {
-            width: calc(100% - 22px);
-            padding: 10px;
+
+        #furnitureList {
+            list-style-type: none;
+            padding: 0;
+            max-height: 250px;
+            overflow-y: auto;
+            margin: 20px 0;
+        }
+
+        li {
+            padding: 12px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s, transform 0.2s;
+            cursor: pointer;
+        }
+
+        li:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.02);
+        }
+
+        input, select {
             margin: 10px 0;
-            border: 2px solid #66bb6a;
-            border-radius: 5px;
-            background-color: #333;
-            color: #ffffff;
+            padding: 12px;
+            width: calc(100% - 24px);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            color: #333;
             transition: border-color 0.3s;
         }
-        input:focus {
+
+        input:focus, select:focus {
             outline: none;
-            border-color: #66bb6a;
+            border: 2px solid #2196F3; /* Изменено на синий */
         }
+
         button {
             width: 100%;
-            padding: 10px;
-            background-color: #66bb6a;
-            color: #000;
+            padding: 12px;
+            background-color: #2196F3; /* Изменено на синий */
+            color: #ffffff;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-            margin: 5px 0;
+            margin: 8px 0;
             transition: background-color 0.3s, transform 0.2s;
         }
+
         button:hover {
-            background-color: #57a052;
+            background-color: #1976D2; /* Изменено на более темный синий */
             transform: scale(1.05);
+        }
+
+        /* Стили для модального окна */
+        #priceModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #priceModal div {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            width: 350px;
+            color: #333;
         }
     </style>
 </head>
 <body>
+    <div class="furniture_container">
+        <h1>Управление мебелью</h1>
+        
+        <label for="search">Поиск:</label>
+        <input type="text" id="search" placeholder="Введите название или тип мебели" oninput="searchFurniture()">
+        
+        <h2>Список мебели:</h2>
+        <ul id="furnitureList" onclick="selectFurniture(event)">
+            <!-- Список мебели будет загружен сюда -->
+        </ul>
+        
+        <label for="name">Название:</label>
+        <input type="text" id="name" placeholder="Название мебели">
+        
+        <label for="type">Тип:</label>
+        <input type="text" id="type" placeholder="Тип мебели">
 
-    <div class="login-container">
-        <h2>Авторизация</h2>
-        <input type="text" id="username" placeholder="Логин" required>
-        <input type="password" id="password" placeholder="Пароль" required>
-        <button onclick="login()">Вход</button>
+        <label for="price">Цена:</label>
+        <input type="text" id="price" placeholder="Цена" disabled>
+
+        <label for="material">Материал:</label>
+        <input type="text" id="material" placeholder="Материал">
+        
+        <button onclick="updateFurniture()">Обновить мебель</button>
+        <button onclick="deleteFurniture()">Удалить мебель</button>
+        <button onclick="clearFields()">Очистить поля</button>
+        <button onclick="logout()">Выход</button>
+        <button onclick="showPriceInfo()">Показать информацию о цене</button>
     </div>
 
+    <div id="priceModal">
+        <div>
+            <h2>Информация о цене</h2>
+            <p id="priceDetails"></p>
+            <button onclick="closePriceModal()">Закрыть</button>
+        </div>
+    </div>
+
+    
     <script>
         async function login() {
     const username = document.getElementById('username').value;

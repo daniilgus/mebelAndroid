@@ -8,10 +8,10 @@ const app = express();
 const port = process.env.PORT || 3000; 
 
 const pool = new Pool({
-    user: 'postgres1',
-    host: 'postgres.railway.internal1',
-    database: 'PGDATABASE=railway1',
-    password: 'AcsRCrWgaxmJqBbBASJkJlUrlEUfhmec',
+    user: 'postgres',
+    host: 'postgres.railway.internal',
+    database: 'railway',
+    password: 'wDivrOooZPjEjgIkQtiXclnsXXEptfst',
     port: 5432,
 });
 

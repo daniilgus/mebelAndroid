@@ -110,18 +110,19 @@
         const baseUrl = 'https://mebelandroid-production.up.railway.app';
         let furnitureData = []; // Хранение всех данных о мебели
 
-        async function loadFurniture() {
+               async function loadFurniture() {
             try {
-                const response = await fetch('/furniture');
+                const response = await fetch(`${baseUrl}/furniture`);
                 if (!response.ok) {
                     throw new Error('Ошибка сети: ' + response.statusText);
                 }
-                const furnitureData = await response.json();
+                const furnitureData = await response.json(); // Здесь нужно использовать глобальную переменную
                 displayFurniture(furnitureData);
             } catch (error) {
                 console.error('Ошибка при загрузке мебели:', error);
             }
         }
+
 
 
         function displayFurniture(data) {

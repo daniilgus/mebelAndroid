@@ -75,14 +75,23 @@ app.delete('/furniture/:id', async (req, res) => {
 });
 
 // Логин
+const bcrypt = require('bcrypt');
+
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        const result = await pool.query('SELECT * FROM users WHERE username = \$1 AND password = \$2', [username, password]);
+        const result = await pool.query('SELECT * FROM users WHERE username = \$1', [username]);
         
         if (result.rows.length > 0) {
-            res.json({ success: true });
+            const user = result.rows[0];
+            const match = await bcrypt.compare(password, user.password); // Сравнение хешей
+
+            if (match) {
+                res.json({ success: true });
+            } else {
+                res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
+            }
         } else {
             res.status(401).json({ success: false, message: 'Неверный логин или пароль' });
         }
@@ -91,6 +100,7 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ success: false, message: 'Ошибка сервера' });
     }
 });
+
 
 app.listen(port, () => {
     console.log(`Сервер запущен на http://localhost:${port}`);

@@ -1,5 +1,4 @@
-// service-worker.js
-const CACHE_NAME = 'my-app-cache-v1';
+const CACHE_NAME = 'my-app-cache-v2'; // Обновите имя кэша
 const urlsToCache = [
     'authorization.html',
     'registration.html',
@@ -25,7 +24,19 @@ self.addEventListener('fetch', (event) => {
         caches.match(event.request)
             .then((response) => {
                 // Возвращаем кэшированный файл, если он есть
-                return response || fetch(event.request);
+                return response || fetch(event.request).then((networkResponse) => {
+                    // Кэшируем ответ, если это не HTML-страница (например, API запросы)
+                    if (event.request.url.includes('/api/')) { // Замените на ваш API URL
+                        return caches.open(CACHE_NAME).then((cache) => {
+                            cache.put(event.request, networkResponse.clone());
+                            return networkResponse;
+                        });
+                    }
+                    return networkResponse;
+                });
+            })
+            .catch((error) => {
+                console.error('Ошибка при обработке запроса:', error);
             })
     );
 });
